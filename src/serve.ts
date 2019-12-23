@@ -9,7 +9,7 @@ const rootDir = process.cwd()
 const pagesDir = `${rootDir}/pages`
 const layoutDir = `${rootDir}/layouts`
 const sectionsDir = `${rootDir}/sections`
-const partsDir = `${rootDir}/parts`
+const componentsDir = `${rootDir}/components`
 const routeFilePath = `${rootDir}/routes.yml`
 const publicDir = `${rootDir}/assets`
 
@@ -21,9 +21,9 @@ console.log(
 
 const app = express()
 
-fs.readdir(partsDir, (error, files = []) => {
+fs.readdir(componentsDir, (error, files = []) => {
   files.forEach((file) => {
-    Handlebars.registerPartial(file.split('.')[0], fs.readFileSync(`${partsDir}/${file}`, 'utf8'))
+    Handlebars.registerPartial(file.split('.')[0], fs.readFileSync(`${componentsDir}/${file}`, 'utf8'))
   })
 
   const pages = yaml.safeLoad(fs.readFileSync(routeFilePath, 'utf8'));
