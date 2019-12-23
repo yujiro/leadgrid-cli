@@ -1,0 +1,4 @@
+- path: /
+  page: top
+- path: /posts
+  page: posts

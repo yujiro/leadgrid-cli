@@ -1,5 +1,7 @@
-layout: main
+name: トップページ
+page: top
+layout: top
+path: /
 sections:
-  - top
-defaults:
-  title: GIG
+  - top_header
+  - top_content
