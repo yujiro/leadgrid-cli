@@ -1,0 +1,16 @@
+{
+  "name": "leadgrid-cli",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "ssh://git@bitbucket.org/giginc/leadgrid-cli.git",
+  "author": "yujiro-arai <arai_yujiro@giginc.co.jp>",
+  "license": "MIT",
+  "bin": {
+    "serve": "./bin/serve.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "handlebars": "^4.5.3",
+    "js-yaml": "^3.13.1"
+  }
+}

@@ -1,0 +1,5 @@
+layout: main
+sections:
+  - top
+defaults:
+  title: GIG
