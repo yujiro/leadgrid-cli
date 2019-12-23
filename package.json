@@ -9,15 +9,19 @@
     "watch": "tsc -w"
   },
   "bin": {
-    "serve": "./bin/serve.js"
+    "leadgrid": "./bin/leadgrid.js"
   },
   "dependencies": {
+    "chalk": "^3.0.0",
     "express": "^4.17.1",
+    "figlet": "^1.2.4",
     "handlebars": "^4.5.3",
     "js-yaml": "^3.13.1"
   },
   "devDependencies": {
+    "@types/chalk": "^2.2.0",
     "@types/express": "^4.17.2",
+    "@types/figlet": "^1.2.0",
     "@types/handlebars": "^4.1.0",
     "@types/js-yaml": "^3.12.1",
     "ts-node": "^8.5.4",
