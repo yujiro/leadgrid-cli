@@ -28,7 +28,8 @@ fs.readdir(componentsDir, (error, files = []) => {
     const layout = fs.readFileSync(layoutPath, 'utf8')
     const template = Handlebars.compile(layout)
 
-    const sections = doc.sections.map((section: string) => {
+    const sectionTemplates = doc === null || doc === undefined ? [] : doc.sections || [] 
+    const sections = sectionTemplates.map((section: string) => {
       const filePath = `${sectionsDir}/${section}.hbs`
       const sectionTemplate = Handlebars.compile(fs.readFileSync(filePath, 'utf8'))
       const values = doc.values[section] || {}
@@ -40,12 +41,10 @@ fs.readdir(componentsDir, (error, files = []) => {
         throw e
       }
     }).join('')
-  
+
     try {
       const values = doc.values || {}
-      const html = template({sections, ...values});
-  
-      app.get(page.path, (_, res) => res.send(html))
+      app.get(page.path, (_, res) => res.send(template({sections, ...values})))
     } catch (e) {
       console.error(chalk.red(`Parse error! check this layout file ---> ${layoutPath}`))
       throw e
