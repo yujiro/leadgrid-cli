@@ -12,6 +12,7 @@ const sectionsDir = `${rootDir}/sections`
 const componentsDir = `${rootDir}/components`
 const routeFilePath = `${rootDir}/routes.yml`
 const publicDir = `${rootDir}/assets`
+const port = 5000
 
 console.log(
   chalk.yellow(
@@ -44,5 +45,5 @@ fs.readdir(componentsDir, (error, files = []) => {
   
 
   app.use('/assets', express.static(publicDir));
-  app.listen(3000, () => console.log('LeadGrid simulator listening on port 3000!'))
+  app.listen(port, () => console.log(`LeadGrid simulator listening on port ${port}!`))
 })
