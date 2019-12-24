@@ -12,7 +12,7 @@ console.log(
 
 nodemon({
   script: __dirname + '/../dist/serve.js',
-  ext: 'js json hbs yml js css'
+  ext: 'js json ts hbs yml js css'
 });
 
 nodemon.on('start', function () {

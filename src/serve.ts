@@ -15,6 +15,15 @@ const port = 5000
 
 const app = express()
 
+Handlebars.registerHelper("get", function(context, options) {
+  const data = options.data.root[context] || []
+  const newContext = {...options.data.root, [context]: data}
+  if (data.length > 0) {
+    return options.fn(newContext)
+  }
+});
+
+
 fs.readdir(componentsDir, (error, files = []) => {
   files.forEach((file) => {
     Handlebars.registerPartial(file.split('.')[0], fs.readFileSync(`${componentsDir}/${file}`, 'utf8'))
