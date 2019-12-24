@@ -31,9 +31,10 @@ fs.readdir(componentsDir, (error, files = []) => {
     const sections = doc.sections.map((section: string) => {
       const filePath = `${sectionsDir}/${section}.hbs`
       const sectionTemplate = Handlebars.compile(fs.readFileSync(filePath, 'utf8'))
+      const values = doc.values[section] || {}
 
       try {
-        return sectionTemplate({})  
+        return sectionTemplate(values)  
       } catch (e) {
         console.error(`Parse error! check this section file ---> ${filePath}`)
         throw e
@@ -41,7 +42,8 @@ fs.readdir(componentsDir, (error, files = []) => {
     }).join('')
   
     try {
-      const html = template({sections});
+      const values = doc.values || {}
+      const html = template({sections, ...values});
   
       app.get(page.path, (_, res) => res.send(html))
     } catch (e) {
