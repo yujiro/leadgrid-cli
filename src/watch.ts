@@ -15,6 +15,13 @@ const port = 5000
 
 const app = express()
 
+if (!isFileExists(routeFilePath)) {
+  console.log(
+    chalk.red('routes.yml ファイルが存在しません')
+  )
+  process.exit(1)
+}
+
 Handlebars.registerHelper("get", function(context, options) {
   const data = options.data.root[context] || []
   const newContext = {...options.data.root, [context]: data}
@@ -22,7 +29,6 @@ Handlebars.registerHelper("get", function(context, options) {
     return options.fn(newContext)
   }
 });
-
 
 fs.readdir(componentsDir, (error, files = []) => {
   files.forEach((file) => {
@@ -32,19 +38,40 @@ fs.readdir(componentsDir, (error, files = []) => {
   const pages = yaml.safeLoad(fs.readFileSync(routeFilePath, 'utf8'));
   
   pages.forEach((page: any) => {
-    const doc = yaml.safeLoad(fs.readFileSync(`${pagesDir}/${page.page}.yml`, 'utf8'));
+    const pageFilePath = `${pagesDir}/${page.page}.yml`
+    if (!isFileExists(pageFilePath)) {
+      console.log(chalk.yellow(`no such file or directory ${pageFilePath}`))
+      return
+    }
+
+    const doc = yaml.safeLoad(fs.readFileSync(pageFilePath, 'utf8'));
     const layoutPath = `${layoutDir}/${doc.layout}.hbs`
+
+    if (!isFileExists(layoutPath)) {
+      console.log(chalk.yellow(`no such file or directory ${pageFilePath}`))
+      return
+    }
+
     const layout = fs.readFileSync(layoutPath, 'utf8')
     const template = Handlebars.compile(layout)
 
     const sectionTemplates = doc === null || doc === undefined ? [] : doc.sections || [] 
     const sections = sectionTemplates.map((section: string) => {
       const filePath = `${sectionsDir}/${section}.hbs`
+      
+      if (!isFileExists(filePath)) {
+        console.log(
+          chalk.yellow(`no such file or directory ${filePath}`)
+        )
+        return ''
+      }
+
       const sectionTemplate = Handlebars.compile(fs.readFileSync(filePath, 'utf8'))
-      const values = doc.values[section] || {}
+      const values = doc.values === null ? {} : doc.values || {}
+      const sectionValues = values[section] || {}
 
       try {
-        return sectionTemplate(values)  
+        return sectionTemplate(sectionValues)  
       } catch (e) {
         console.error(`Parse error! check this section file ---> ${filePath}`)
         throw e
@@ -63,3 +90,12 @@ fs.readdir(componentsDir, (error, files = []) => {
   app.use('/assets', express.static(publicDir));
   app.listen(port, () => console.log(`LeadGrid simulator listening on port ${port}!`))
 })
+
+function isFileExists(filePath: string) {
+  try {
+    fs.statSync(filePath)
+    return true
+  } catch (e) {
+    return false
+  }
+}
