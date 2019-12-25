@@ -15,7 +15,7 @@ require('yargs')
     watch()
   })
   .command('deploy', 'deploy files', (yargs) => {
-    console.log({yargs})
+    require('../dist/deploy')
   })
   .argv
 
