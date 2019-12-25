@@ -12,6 +12,7 @@
     "leadgrid": "./bin/leadgrid.js"
   },
   "dependencies": {
+    "@types/nodemon": "^1.19.0",
     "chalk": "^3.0.0",
     "express": "^4.17.1",
     "figlet": "^1.2.4",

@@ -4,6 +4,12 @@ var nodemon = require('nodemon');
 var figlet = require('figlet')
 var chalk = require('chalk')
 
+console.log(
+  chalk.yellow(
+    figlet.textSync('LeadGrid', { horizontalLayout: 'full' })
+  )
+);
+
 require('yargs')
   .command('watch', 'start the server and watch update files', (yargs) => {
     watch()
@@ -14,19 +20,13 @@ require('yargs')
   .argv
 
 function watch() {
-  console.log(
-    chalk.yellow(
-      figlet.textSync('LeadGrid', { horizontalLayout: 'full' })
-    )
-  );
-
   nodemon({
-    script: __dirname + '/../dist/serve.js',
+    script: __dirname + '/../dist/watch.js',
     ext: 'js json ts hbs yml js css'
   });
   
   nodemon.on('start', function () {
-    console.log('LeadGrid has started');
+    
   }).on('quit', function () {
     console.log('LeadGrid has quit');
     process.exit();
