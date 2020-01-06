@@ -9,15 +9,15 @@ const pagesDir = `${rootDir}/pages`
 const layoutDir = `${rootDir}/layouts`
 const sectionsDir = `${rootDir}/sections`
 const componentsDir = `${rootDir}/components`
-const routeFilePath = `${rootDir}/routes.yml`
+const configFilePath = `${rootDir}/leadgrid.yml`
 const publicDir = `${rootDir}/assets`
 const port = 5000
 
 const app = express()
 
-if (!isFileExists(routeFilePath)) {
+if (!isFileExists(configFilePath)) {
   console.log(
-    chalk.red('routes.yml ファイルが存在しません')
+    chalk.red('leadgrid.yml ファイルが存在しません')
   )
   process.exit(1)
 }
@@ -30,63 +30,91 @@ Handlebars.registerHelper("get", function(context, options) {
   }
 });
 
+Handlebars.registerHelper("terms", function(context, options) {
+  const data = options.data.root[context] || []
+  const newContext = {...options.data.root, [context]: data}
+  if (data.length > 0) {
+    return options.fn(newContext)
+  }
+});
+
+Handlebars.registerHelper("img_url", function(context, options) {
+  return context;
+});
+
+Handlebars.registerHelper("date", function(context, options) {
+  return context;
+});
+
+function renderSection(sectionTemplates: Array<any>) {
+  return sectionTemplates.map((section: any) => {
+    const filePath = `${sectionsDir}/${section.name}.hbs`
+    
+    if (!isFileExists(filePath)) {
+      console.log(
+        chalk.yellow(`no such file or directory ${filePath}`)
+      )
+      return ''
+    }
+
+    const sectionTemplate = Handlebars.compile(fs.readFileSync(filePath, 'utf8'))
+    const values = section.values === null ? {} : section.values || {}
+
+    try {
+      return sectionTemplate(values)  
+    } catch (e) {
+      console.error(`Parse error! check this section file ---> ${filePath}`)
+      throw e
+    }
+  }).join('')
+}
+
+function addRoute(pageRoute: {page: string, path: string}) {
+  const pageFilePath = `${pagesDir}/${pageRoute.page}.yml`
+  if (!isFileExists(pageFilePath)) {
+    console.log(chalk.yellow(`no such file or directory ${pageFilePath}`))
+    return
+  }
+
+  const doc = yaml.safeLoad(fs.readFileSync(pageFilePath, 'utf8'));
+  const layoutPath = `${layoutDir}/${doc.layout}.hbs`
+
+  if (!isFileExists(layoutPath)) {
+    console.log(chalk.yellow(`no such file or directory ${pageFilePath}`))
+    return
+  }
+
+  const template = Handlebars.compile(fs.readFileSync(layoutPath, 'utf8'))
+  const sectionTemplates = doc === null || doc === undefined ? [] : doc.sections || [] 
+  const sections = renderSection(sectionTemplates)
+
+  try {
+    const values = doc.values || {}
+    app.get(pageRoute.path, (_, res) => res.send(template({sections, ...values})))
+    console.log(`add route: ${pageRoute.path} - page: ${pageRoute.page}`)
+  } catch (e) {
+    console.error(chalk.red(`Parse error! check this layout file ---> ${layoutPath}`))
+    throw e
+  }
+}
+
 fs.readdir(componentsDir, (error, files = []) => {
   files.forEach((file) => {
     Handlebars.registerPartial(file.split('.')[0], fs.readFileSync(`${componentsDir}/${file}`, 'utf8'))
   })
 
-  const pages = yaml.safeLoad(fs.readFileSync(routeFilePath, 'utf8'));
+  const config = yaml.safeLoad(fs.readFileSync(configFilePath, 'utf8'));
   
-  pages.forEach((page: any) => {
-    const pageFilePath = `${pagesDir}/${page.page}.yml`
-    if (!isFileExists(pageFilePath)) {
-      console.log(chalk.yellow(`no such file or directory ${pageFilePath}`))
-      return
-    }
-
-    const doc = yaml.safeLoad(fs.readFileSync(pageFilePath, 'utf8'));
-    const layoutPath = `${layoutDir}/${doc.layout}.hbs`
-
-    if (!isFileExists(layoutPath)) {
-      console.log(chalk.yellow(`no such file or directory ${pageFilePath}`))
-      return
-    }
-
-    const layout = fs.readFileSync(layoutPath, 'utf8')
-    const template = Handlebars.compile(layout)
-
-    const sectionTemplates = doc === null || doc === undefined ? [] : doc.sections || [] 
-    const sections = sectionTemplates.map((section: string) => {
-      const filePath = `${sectionsDir}/${section}.hbs`
-      
-      if (!isFileExists(filePath)) {
-        console.log(
-          chalk.yellow(`no such file or directory ${filePath}`)
-        )
-        return ''
-      }
-
-      const sectionTemplate = Handlebars.compile(fs.readFileSync(filePath, 'utf8'))
-      const values = doc.values === null ? {} : doc.values || {}
-      const sectionValues = values[section] || {}
-
-      try {
-        return sectionTemplate(sectionValues)  
-      } catch (e) {
-        console.error(`Parse error! check this section file ---> ${filePath}`)
-        throw e
-      }
-    }).join('')
-
-    try {
-      const values = doc.values || {}
-      app.get(page.path, (_, res) => res.send(template({sections, ...values})))
-    } catch (e) {
-      console.error(chalk.red(`Parse error! check this layout file ---> ${layoutPath}`))
-      throw e
-    }
+  config.routes.forEach((pageRoute: {page: string, path: string}) => {
+    addRoute(pageRoute)
   });
-  
+
+  Object.entries(config.post_types).map((postType: any) => {
+    const [key, value] = postType
+    addRoute({page: value.list, path: `/${key}`})
+    addRoute({page: value.detail, path: `/${key}/*`})
+  });
+
   app.use('/assets', express.static(publicDir));
   app.listen(port, () => console.log(`LeadGrid simulator listening on port ${port}!`))
 })
