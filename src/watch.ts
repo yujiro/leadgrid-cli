@@ -3,6 +3,7 @@ import * as yaml from 'js-yaml'
 import * as fs from 'fs'
 import Handlebars from 'handlebars'
 import * as chalk from 'chalk'
+import * as dot from 'dot-object'
 
 const rootDir = process.cwd()
 const pagesDir = `${rootDir}/pages`
@@ -44,6 +45,10 @@ Handlebars.registerHelper("img_url", function(context, options) {
 
 Handlebars.registerHelper("date", function(context, options) {
   return context;
+});
+
+Handlebars.registerHelper("editable_text", function(context, options) {
+  return dot.pick(context, options['data']['root']);
 });
 
 function renderSection(sectionTemplates: Array<any>) {

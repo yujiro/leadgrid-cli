@@ -81,6 +81,11 @@
   dependencies:
     del "*"
 
+"@types/dot-object@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@types/dot-object/-/dot-object-1.7.0.tgz#a84e2676ca32870ff015580367e708d02ef253e6"
+  integrity sha512-8SV+eBD1/yBPSkc/3/egKQ+Th6EsOrNd6aiyzXUoJCrSHn7Sx/cNGNQohtx1V1VQaP/R/bBUl1XhH9ymRcEnqw==
+
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -571,6 +576,11 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
+commander@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-4.0.1.tgz#b67622721785993182e807f4883633e6401ba53c"
+  integrity sha512-IPF4ouhCP+qdlcmCedhxX4xiGBPyigb8v5NeUp+0LyhwLgxMqyp3S0vl7TAPfS/hiP7FC3caI/PB9lTmP8r1NA==
+
 commander@~2.20.3:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
@@ -759,6 +769,14 @@ dir-glob@^3.0.1:
   integrity sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==
   dependencies:
     path-type "^4.0.0"
+
+dot-object@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/dot-object/-/dot-object-2.1.2.tgz#571fece46f16368193bbe39265b8ec7804c5b0f4"
+  integrity sha512-Hx7gYDQfb4umAku7VJW0fr3SXXTaghfBhYNbc4eHTjkgPMoY4DAw210j76mSSlV9LiTozVswT462e4xL7w3GZA==
+  dependencies:
+    commander "^4.0.0"
+    glob "^7.1.5"
 
 dot-prop@^4.1.0:
   version "4.2.0"
@@ -1093,7 +1111,7 @@ glob-parent@^5.1.0, glob-parent@~5.1.0:
   dependencies:
     is-glob "^4.0.1"
 
-glob@^7.1.3, glob@^7.1.4:
+glob@^7.1.3, glob@^7.1.4, glob@^7.1.5:
   version "7.1.6"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.6.tgz#141f33b81a7c2492e125594307480c46679278a6"
   integrity sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==
