@@ -43,7 +43,7 @@ function zip(): Promise<string> {
     archive.glob('layouts/**');
     archive.glob('pages/**');
     archive.glob('sections/**');
-    archive.glob('routes.yml');
+    archive.glob('leadgrid.yml');
     archive.finalize();
   
     output.on("close", () => {
@@ -65,12 +65,22 @@ function upload(zipFilePath: string) {
     uploading.start()
 
     await request.post({
-      uri: 'https://dev-futurestandard.goleadgrid.com/api/theme',
-      form: {
-        file: fs.createReadStream(zipFilePath)
+      uri: 'http://render2.localhost:8000/api/page_themes/update',
+      formData: {
+        theme: {
+          value: fs.createReadStream(zipFilePath),
+          options: {
+            filename: 'topsecret.jpg',
+          }
+        }
+      },
+      headers:{
+        "Content-Type":"multipart/form-data"
       }
     }, (error, httpResponse, body) => {
       uploading.stop()
+
+      console.log({error, httpResponse})
 
       if (httpResponse.statusCode === 200) {
         resolve()
