@@ -9,5 +9,15 @@ export default {
   api_path: {
     theme_update: '/api/page_themes/update'
   },
+  dirs: {
+    rootDir,
+    pagesDir: `${rootDir}/pages`,
+    layoutDir: `${rootDir}/layouts`,
+    sectionsDir: `${rootDir}/sections`,
+    componentsDir: `${rootDir}/components`,
+    configFilePath: `${rootDir}/leadgrid.yml`,
+    publicDir: `${rootDir}/assets`,
+  },
+  port: 5000,
   ...config
 }
