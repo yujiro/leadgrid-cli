@@ -15,7 +15,9 @@ require('yargs')
     watch()
   })
   .command('deploy', 'deploy files', (yargs) => {
-    require('../dist/deploy')
+    const {deploy} = require('../dist/deploy')
+    const env = yargs.argv['_'][1]
+    deploy(env)
   })
   .argv
 

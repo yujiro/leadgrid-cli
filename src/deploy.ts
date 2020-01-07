@@ -3,16 +3,24 @@ import * as archiver from 'archiver'
 import * as clui from 'clui'
 import * as request from 'request'
 import * as del from 'del'
-import chalk = require('chalk')
+import * as chalk from 'chalk'
+import config from './config'
 
-deploy()
+export async function deploy(env: string) {
+  const serverURL = config.server_base_url[env]
 
-async function deploy() {
+  if (serverURL === undefined) {
+    console.log(chalk.red(`ERROR: Environment "${env}" is not found.`))
+    process.exit(1)
+  }
+
   mkdir()
   const zipFilePath = await zip()
 
   try {
-    await upload(zipFilePath)
+    const url = new URL(config.api_path.theme_update, serverURL);
+
+    await upload(zipFilePath, url.href)
     await rmDir()
   } catch (e) {
     console.log(chalk.red('ERROR: File upload fail.'))
@@ -59,13 +67,13 @@ function zip(): Promise<string> {
   })  
 }
 
-function upload(zipFilePath: string) {
+function upload(zipFilePath: string, uploadURL: string) {
   return new Promise(async (resolve, reject) => {
     const uploading = new clui.Spinner('Uploading...  ', ['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷']);
     uploading.start()
 
     await request.post({
-      uri: 'http://render2.localhost:8000/api/page_themes/update',
+      uri: uploadURL,
       formData: {
         theme: {
           value: fs.createReadStream(zipFilePath),

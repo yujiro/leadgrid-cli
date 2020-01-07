@@ -47,6 +47,10 @@ Handlebars.registerHelper("date", function(context, options) {
   return context;
 });
 
+Handlebars.registerHelper("join", function(context = [], options) {
+  return context.join(options['hash']['separator'] || '')
+});
+
 Handlebars.registerHelper("editable_text", function(context, options) {
   return dot.pick(context, options['data']['root']);
 });
