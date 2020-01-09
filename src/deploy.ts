@@ -86,9 +86,8 @@ function upload(zipFilePath: string, uploadURL: string) {
         "Content-Type":"multipart/form-data"
       }
     }, (error, httpResponse, body) => {
+      console.log(error === null ? "Done!" : "Error ∑(ﾟДﾟﾉ)ﾉ")
       uploading.stop()
-
-      console.log({error, httpResponse})
 
       if (httpResponse.statusCode === 200) {
         resolve()

@@ -11,3 +11,8 @@ export function warning(...message: any) {
 export function error(...message: any) {
   console.log(chalk.red(message))
 }
+
+export function debug(...message: any) {
+  console.log(chalk.gray(message))
+}
+
