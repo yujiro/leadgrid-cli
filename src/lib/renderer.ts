@@ -32,7 +32,7 @@ export function render(leadGridConfig: any, pageName: string, pageConfig: any) {
   }
 }
 
-export function renderSection(sectionTemplates: Array<any>, sectionsDir: string, pageValues: any) {
+export function renderSection(sectionTemplates: Array<any> = [], sectionsDir: string, pageValues: any) {
   return sectionTemplates.map((section: any) => {
     const filePath = `${sectionsDir}/${section.name}.hbs`
     
