@@ -11,13 +11,18 @@ const server = new Server()
 server.staticRoute('/assets', config.dirs.publicDir)
 
 config.routes.forEach((route: {page: string, path: string}) => {
-  server.route(route.path, renderer.render(config, route.page, page.loadPageConfig(config, route.page)))
+  const pageConfig = {...page.loadPageConfig(config, route.page), site: config.dummy.site}
+  server.route(route.path, renderer.render(config, route.page, pageConfig))
 });
 
 Object.entries(config.post_types).map((postType: any) => {
   const [key, value] = postType
-  server.route(`/${key}`, renderer.render(config, value.list, page.loadPageConfig(config, value.list)))
-  server.route(`/${key}/*`, renderer.render(config, value.detail, page.loadPageConfig(config, value.detail)))
+
+  const listPageConfig = {...page.loadPageConfig(config, value.list), site: config.dummy.site}
+  server.route(`/${key}`, renderer.render(config, value.list, listPageConfig))
+
+  const detailPageConfig = {...page.loadPageConfig(config, value.detail), site: config.dummy.site}
+  server.route(`/${key}/*`, renderer.render(config, value.detail, detailPageConfig))
 })
 
 server.start(config.port)

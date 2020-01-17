@@ -17,13 +17,13 @@ export function render(leadGridConfig: any, pageName: string, pageConfig: any) {
     return `no such file or directory ${layoutPath}`
   }
 
-  const template = Handlebars.compile(file.read(layoutPath))
+  const template = Handlebars.compile(file.read(layoutPath), )
   const sectionTemplates = pageConfig === null || pageConfig === undefined ? [] : pageConfig.sections || [] 
   const values = {...(pageConfig.values || {}), page_name: pageName}
   const sections = renderSection(sectionTemplates, leadGridConfig.dirs.sectionsDir, values)
 
   try {
-    return template({sections, ...values})
+    return template({sections, ...values}, {data: {site: pageConfig.site}})
   } catch (e) {
     const message = `Parse error! check this layout file ---> ${layoutPath}`
     logger.error(message)
