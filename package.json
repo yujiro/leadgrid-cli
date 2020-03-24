@@ -2,9 +2,10 @@
   "name": "leadgrid-cli",
   "version": "0.1.0",
   "main": "src/index.js",
-  "repository": "ssh://git@bitbucket.org/giginc/leadgrid-cli.git",
-  "author": "yujiro-arai <arai_yujiro@giginc.co.jp>",
+  "repository": "git@github.com:yujiro/leadgrid-cli.git",
+  "author": "Yujiro Arai <yujiroarai@gmail.com>",
   "license": "MIT",
+  "homepage": "https://goleadgrid.com",
   "scripts": {
     "watch": "tsc -w"
   },
