@@ -20,7 +20,7 @@
     "clui": "^0.3.6",
     "del": "^5.1.0",
     "dot-object": "^2.1.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "figlet": "^1.2.4",
     "handlebars": "^4.5.3",
     "js-yaml": "^3.13.1",
